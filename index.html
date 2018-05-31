@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Local Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../bootstrap/bootstrap.min.css">
+    <style>
+        .row{
+            height: 50vh;
+        }
+        img{
+            overflow: auto;
+            width: 60% !important;
+            height: auto !important;
+        }
+        .centering{
+            position: relative;
+        }
+        .centered{
+            position: absolute;
+            height: auto;
+            top: 0; bottom: 0; left:0; right: 0;
+            margin: auto;
+        }
+        .wrap-content{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="full-height">
+        <div class="container-fluid">
+            <div class="row bg-light">
+                <div class="col-sm-3 text-right d-none d-sm-block"></div>
+                <div class="col-sm-5 centering m-0 p-0">
+                    <img src="https://image.ibb.co/jzAXDJ/clouds.png" alt="cloudy weather" class="centered">
+                </div>
+                <div class="col-sm-1 text-primary centering m-0 p-0">
+                    <div class="mx-auto centered wrap-content">
+                        <p id="date" class="text-primary text-uppercase mb-0 p-0">Today</p>
+                        <h1 id="temp" class="mb-0 p-0">25<sup>o</sup>C</h1>
+                        <p id="weather"class="text-uppercase mb-0">Cloudy</p>
+                        <p id="location" class="text-uppercase mb-0"></p>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-right d-md-block d-none"></div>
+            </div>
+            <div class="row bg-primary">
+                <div class="col-md-3"></div>
+                <div class="col-md-6"></div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../../bootstrap/jquery-3.2.1.min.js"></script>
+    <script>
+        const cloud = "cloud";
+        const sun = "sun";
+        const dust = "dust";
+        const rain = "rain";
+        const cloudImg = "https://image.ibb.co/jzAXDJ/clouds.png";
+        const rainImg = "https://image.ibb.co/bC1KAy/rain.png";
+        const sunImg = "https://image.ibb.co/kZk1OJ/sunny.png";
+
+        var img = $(img);
+        var apiKey = "8069089361fa001af60bbd3273890a8b";
+        var baseUrl = "https://api.openweathermap.org/data/2.5/weather";
+        var latParam = "?lat=";
+        var queryParam = "?q=";
+        var query = "Ahvaz";
+        var lat = "";
+        var longParam = "?long=";
+        var long = "";
+        var ampersand = "&";
+        var idParam = "appid=";
+        var unitParam = "units=";
+        var unit = "metric";
+        var callBack = "callback=?";
+        var temp = "";
+
+        var test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
+
+        function appLogic(weather){
+            if(weather.includes(cloud)){
+                img.attr("src", cloudImg);
+            }
+
+            if(weather.includes(rain)) img.attr("src", rainImg);
+
+            if(weather.includes(sun)) img.attr("src", "sunImg");
+        }
+
+        function navSuccess(pos){
+            //get latitude
+            lat = pos.latitude;
+            console.log(lat);
+            
+            //get longitude
+            long = pos.longitude;
+            console.log(long);
+
+            var weatherUrl = baseUrl + latParam + lat + ampersand + longParam + long + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
+
+            jqxhr(weatherUrl);
+        }
+
+        function jqxhr(url){
+            var date = $("#date");
+            var temp = $("#temp");
+            var weather = $("#weather");
+            var location = $("#location");
+
+            $.getJSON(url, function(data){
+                console.log(data);
+                console.log(data.base);
+                temp.html(data.main.temp + "<sup>o</sup>C");
+                weather.html(data.weather[0].main);
+                location.html(data.name);
+                appLogic(data.weather[0].main);
+            }).fail(() => {
+                console.log("An error occurred");
+                query = prompt("Enter your current city");
+                test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
+                jqxhr(test);
+            });
+        }
+
+        $(function(){
+            navigator.geolocation.getCurrentPosition(navSuccess, err => {
+                console.log("there was an error");
+                jqxhr(test);
+                console.log("retrying...");
+            })
+        });
+    </script>
+</body>
+</html>
