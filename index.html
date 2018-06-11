@@ -40,10 +40,10 @@
                 </div>
                 <div class="col-sm-1 text-primary centering m-0 p-0">
                     <div class="mx-auto centered wrap-content">
-                        <p id="date" class="text-primary text-uppercase mb-0 p-0">Today</p>
-                        <h1 id="temp" class="mb-0 p-0">Waiting for data...</h1>
-                        <p id="weather"class="text-uppercase mb-0">Hang on...</p>
                         <p id="location" class="text-uppercase mb-0"></p>
+                        <p id="date" class="text-primary text-uppercase mb-0 p-0">Today</p>
+                        <h1 id="temp" class="mb-0 p-0">...</h1>
+                        <p id="weather"class="text-uppercase mb-0">One sec...</p>
                     </div>
                 </div>
                 <div class="col-sm-3 text-right d-md-block d-none"></div>
@@ -57,16 +57,22 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>
+        //strings for various weather descriptions
+        const clear = "clear";
         const cloud = "cloud";
         const sun = "sun";
         const dust = "dust";
         const rain = "rain";
-        const clearImg = "https://image.ibb.co/cVy2k8/clear.jpg";
+
+        //img src urls
+        const clearImg = "https://spaceplace.nasa.gov/review/blue-sky/bluesky.en.png";
         const cloudImg = "https://image.ibb.co/jzAXDJ/clouds.png";
         const rainImg = "https://image.ibb.co/bC1KAy/rain.png";
         const sunImg = "https://image.ibb.co/kZk1OJ/sunny.png";
 
-        var img = $(img);
+        var img = $("img");
+
+        //openweathermap api url
         var apiKey = "8069089361fa001af60bbd3273890a8b";
         var baseUrl = "https://api.openweathermap.org/data/2.5/weather";
         var latParam = "?lat=";
@@ -84,22 +90,26 @@
 
         var test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
 
+        //fallback for failed geolocation query
         function fallback(){
             query = prompt("Enter your current city");
             test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
             jqxhr(test);
         }
 
+        //this function just modifies the src attribute of the weather img
         function appLogic(weather){
+            weather = weather.toLowerCase();
+
             if(weather.includes(cloud)){
                 img.attr("src", cloudImg);
             }
 
             if(weather.includes(rain)) img.attr("src", rainImg);
 
-            if(weather.includes(sun)) img.attr("src", "sunImg");
+            if(weather.includes(sun)) img.attr("src", sunImg);
 
-            if(weather.includes(clear)) img.attr("src", "clearImg");
+            if(weather.includes(clear)) img.attr("src", clearImg);
         }
 
         function navSuccess(pos){
@@ -116,6 +126,7 @@
             jqxhr(weatherUrl);
         }
 
+        //ajax request for weather
         function jqxhr(url){
             var date = $("#date");
             var temp = $("#temp");
@@ -135,7 +146,7 @@
         $(function(){
             navigator.geolocation.getCurrentPosition(navSuccess, err => {
                 fallback();
-            })
+            });
         });
     </script>
 </body>
