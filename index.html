@@ -36,7 +36,7 @@
             <div class="row bg-light">
                 <div class="col-sm-3 text-right d-none d-sm-block"></div>
                 <div class="col-sm-5 centering m-0 p-0">
-                    <img src="https://image.ibb.co/jzAXDJ/clouds.png" alt="cloudy weather" class="centered">
+                    <img src="https://image.ibb.co/dZzmCo/weather.png" alt="cloudy weather" class="centered">
                 </div>
                 <div class="col-sm-1 text-primary centering m-0 p-0">
                     <div class="mx-auto centered wrap-content">
@@ -61,6 +61,7 @@
         const sun = "sun";
         const dust = "dust";
         const rain = "rain";
+        const clearImg = "https://image.ibb.co/cVy2k8/clear.jpg";
         const cloudImg = "https://image.ibb.co/jzAXDJ/clouds.png";
         const rainImg = "https://image.ibb.co/bC1KAy/rain.png";
         const sunImg = "https://image.ibb.co/kZk1OJ/sunny.png";
@@ -83,6 +84,12 @@
 
         var test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
 
+        function fallback(){
+            query = prompt("Enter your current city");
+            test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
+            jqxhr(test);
+        }
+
         function appLogic(weather){
             if(weather.includes(cloud)){
                 img.attr("src", cloudImg);
@@ -91,6 +98,8 @@
             if(weather.includes(rain)) img.attr("src", rainImg);
 
             if(weather.includes(sun)) img.attr("src", "sunImg");
+
+            if(weather.includes(clear)) img.attr("src", "clearImg");
         }
 
         function navSuccess(pos){
@@ -114,25 +123,18 @@
             var location = $("#location");
 
             $.getJSON(url, function(data){
-                console.log(data);
-                console.log(data.base);
                 temp.html(data.main.temp + "<sup>o</sup>C");
                 weather.html(data.weather[0].main);
                 location.html(data.name);
                 appLogic(data.weather[0].main);
             }).fail(() => {
-                console.log("An error occurred");
-                query = prompt("Enter your current city");
-                test = baseUrl + queryParam + query + ampersand + unitParam + unit + ampersand + idParam + apiKey + ampersand + callBack;
-                jqxhr(test);
+                fallback();
             });
         }
 
         $(function(){
             navigator.geolocation.getCurrentPosition(navSuccess, err => {
-                console.log("there was an error");
-                jqxhr(test);
-                console.log("retrying...");
+                fallback();
             })
         });
     </script>
