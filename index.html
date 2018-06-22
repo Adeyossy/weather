@@ -8,12 +8,15 @@
     <link rel="shortcut icon" href="/favicon.png" type="image/png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <style>
-        .row{
+        .half-height{
             height: 50vh;
+        }
+        .quarter-height{
+            height: 25vh;
         }
         img{
             overflow: auto;
-            width: 60% !important;
+            width: 50% !important;
             height: auto !important;
         }
         .centering{
@@ -31,25 +34,30 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-dark">
     <div class="full-height">
         <div class="container-fluid">
-            <div class="row bg-light">
+            <div class="row quarter-height">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3"></div>
+            </div>
+            <div class="row half-height">
                 <div class="col-sm-3 text-right d-none d-sm-block"></div>
-                <div class="col-sm-5 centering m-0 p-0">
+                <div class="col-sm-4 centering m-0 p-0">
                     <img src="https://image.ibb.co/dZzmCo/weather.png" alt="cloudy weather" class="centered">
                 </div>
-                <div class="col-sm-1 text-primary centering m-0 p-0">
+                <div class="col-sm-2 text-primary centering m-0 p-0">
                     <div class="mx-auto centered wrap-content">
                         <p id="location" class="text-uppercase mb-0"></p>
                         <p id="date" class="text-primary text-uppercase mb-0 p-0">Today</p>
-                        <h1 id="temp" class="mb-0 p-0">...</h1>
+                        <h3 id="temp" class="mb-0 p-0">...</h3>
                         <p id="weather"class="text-uppercase mb-0">One sec...</p>
                     </div>
                 </div>
                 <div class="col-sm-3 text-right d-md-block d-none"></div>
             </div>
-            <div class="row bg-primary">
+            <div class="row quarter-height">
                 <div class="col-md-3"></div>
                 <div class="col-md-6"></div>
                 <div class="col-md-3"></div>
